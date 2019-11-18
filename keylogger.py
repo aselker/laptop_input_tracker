@@ -14,13 +14,22 @@ log_file_name = sys.argv[1]
 
 recent_history = {}
 last_key = "space"
+second_last_key = "space"
 
 
 def OnKeyPress(event):
     global last_key
+    global second_last_key
+
     recent_history[event.Key] = recent_history.get(event.Key, 0) + 1
+
     pair = (last_key, event.Key)
     recent_history[pair] = recent_history.get(pair, 0) + 1
+
+    triple = (second_last_key, last_key, event.Key)
+    recent_history[triple] = recent_history.get(triple, 0) + 1
+
+    second_last_key = last_key
     last_key = event.Key
 
 
