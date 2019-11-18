@@ -44,4 +44,5 @@ if __name__ == "__main__":
                 for pair in titles:
                     f.write(str(pair))
                     f.write("\n")
+            titles = []
         time.sleep(1)
