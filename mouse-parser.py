@@ -24,20 +24,15 @@ if __name__ == "__main__":
 
             timestamp = int(words[0]) / 1000 / 1000 / 1000  # Get timestamp in seconds
 
-            position = [timestamp, None, None]
-
             if words[1] == "motion":
-                if len(words[2:]) == 2:
-                    _, position[1] = parse_motion_word(words[2])
-                    _, position[2] = parse_motion_word(words[3])
-                else:
-                    axis, pos = parse_motion_word(words[2])
-                    if axis == 1:
-                        position[1] = positions[-1][1]
-                        position[2] = pos
-                    else:
+                position = list(positions[-1])
+                position[0] = timestamp
+                for word in words[2:]:
+                    axis, pos = parse_motion_word(word)
+                    if axis == 0:
                         position[1] = pos
-                        position[2] = positions[-1][2]
+                    if axis == 1:
+                        position[2] = pos
 
                 positions.append(tuple(position))
 
