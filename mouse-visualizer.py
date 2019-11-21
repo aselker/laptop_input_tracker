@@ -19,8 +19,6 @@ def show_streamlines(diffs):
     yvels = np.transpose(diffs[:, :, 1])
 
     plt.streamplot(xs, ys, xvels, yvels, linewidth=magnitude, density=3, arrowstyle="-")
-    # plt.streamplot(xs, ys, xvels, yvels, linewidth=5, density=3, arrowstyle="-")
-    plt.show()
 
 
 screen_size = (3200, 1800)
@@ -46,4 +44,6 @@ if __name__ == "__main__":
     # sns.heatmap(amplitudes)
     # plt.show()
 
+    plt.figure(figsize=(32, 18))
     show_streamlines(total_diffs)
+    plt.savefig("streamlines.pdf")

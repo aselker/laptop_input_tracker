@@ -58,4 +58,4 @@ if __name__ == "__main__":
 
         criscross_plot(dates, amounts, "g" if i else "b", linewidth=0.6)
 
-    plt.savefig("fig.svg")
+    plt.savefig("mouse_timeseries.png")
