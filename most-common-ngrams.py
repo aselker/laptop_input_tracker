@@ -13,6 +13,7 @@ print(len(three_grams))
 one_grams = sorted(one_grams, key=lambda x: -x[1])
 two_grams = sorted(two_grams, key=lambda x: -x[1])
 three_grams = sorted(three_grams, key=lambda x: -x[1])
+
 print(one_grams[:100])
 print(two_grams[:100])
 print(three_grams[:100])
