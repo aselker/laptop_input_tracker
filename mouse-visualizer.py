@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from skimage.filters import gaussian
 
+from pickle_merger import import_and_merge
+
 
 def show_streamlines(diffs):
     magnitude = np.transpose(np.linalg.norm(diffs, axis=2)) * 6
@@ -25,21 +27,7 @@ def show_streamlines(diffs):
 screen_size = (3200, 1800)
 
 if __name__ == "__main__":
-
-    data_series = []
-
-    for filename in sys.argv[1:]:
-        series = pickle.load(open(filename, "rb"))
-
-        first_valid = 0
-        while any([x is None for x in series[first_valid]]):
-            first_valid += 1
-
-        series = series[first_valid:]
-
-        data_series += series
-
-    data_series = np.array(sorted(data_series))
+    data_series = np.array(import_and_merge(sys.argv[1:]))
 
     poss = data_series[:, 1:3].astype(np.int32)
     diffs = np.diff(poss, axis=0)
