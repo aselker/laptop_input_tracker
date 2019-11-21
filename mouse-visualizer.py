@@ -18,7 +18,20 @@ def show_streamlines(diffs):
     xvels = np.transpose(diffs[:, :, 0])
     yvels = np.transpose(diffs[:, :, 1])
 
-    plt.streamplot(xs, ys, xvels, yvels, linewidth=magnitude, density=3, arrowstyle="-")
+    color = np.array([95, 85, 110]) / 255
+    # color = np.array([np.full_like(xs, c) for c in color])
+    color = tuple(color)
+
+    plt.streamplot(
+        xs,
+        ys,
+        xvels,
+        yvels,
+        color=color,
+        linewidth=magnitude,
+        density=3,
+        arrowstyle="-",
+    )
 
 
 def show_heatmap(diffs):
@@ -45,7 +58,6 @@ def show_heatmap(diffs):
         return np.transpose(mixed)
 
     colors = color_map(magnitude)
-    print(colors.shape)
 
     plt.imshow(colors)
 
@@ -76,5 +88,5 @@ if __name__ == "__main__":
     plt.figure(figsize=(32, 18))
     show_streamlines(total_diffs)
     show_heatmap(total_diffs)
-    # plt.savefig("streamlines.pdf")
-    plt.show()
+    plt.savefig("streamlines.svg")
+    # plt.show()
