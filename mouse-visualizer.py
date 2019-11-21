@@ -86,7 +86,9 @@ if __name__ == "__main__":
     # plt.show()
 
     plt.figure(figsize=(32, 18))
+    plt.axis("off")
+
     show_streamlines(total_diffs)
     show_heatmap(total_diffs)
-    plt.savefig("streamlines.svg")
+    plt.savefig("mouse_visualized.png", dpi=500, transparent=True)
     # plt.show()

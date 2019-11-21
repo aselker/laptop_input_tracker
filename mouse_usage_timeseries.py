@@ -41,21 +41,34 @@ def criscross_plot(xs, ys, *args, **kwargs):
     plt.plot(xs, ys_2, *args, **kwargs)
 
 
+def loop_by_day(times):
+    # TODO: Offset
+    day = 60 * 60 * 24
+    times = np.asarray(times) % day
+    return sorted(times)
+
+
 if __name__ == "__main__":
     assert len(sys.argv) == 3
 
-    plt.figure(figsize=(60, 4))
+    plt.figure(figsize=(20, 8))
+    # plt.axis("off")
+
+    colors = [(1, 1, 1), tuple(np.array([95, 85, 110]) / 255)]
 
     for i, filename in enumerate(sys.argv[1:]):
         # data_series = np.array(pickle.load(open(filename, "rb")))
         data_series = np.array(import_and_merge([filename]))
-        times = data_series[:, 0]
+        times = loop_by_day(data_series[:, 0])
         dates, amounts = make_usage_timeseries(times)
 
         amounts = np.array(amounts)
+
+        # Make one plot upside down
         if i % 2:
             amounts = -amounts
 
-        criscross_plot(dates, amounts, "g" if i else "b", linewidth=0.6)
+        criscross_plot(dates, amounts, color=colors[i], linewidth=0.6)
 
-    plt.savefig("mouse_timeseries.png")
+    plt.savefig("mouse_timeseries.png", dpi=300, transparent=True)
+    # plt.show()
