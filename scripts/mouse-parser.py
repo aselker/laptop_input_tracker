@@ -12,7 +12,6 @@ def parse_motion_word(word):
 
 
 if __name__ == "__main__":
-
     assert sys.argv[1], sys.argv[2]
 
     positions = [(None, None, None)]
