@@ -27,21 +27,32 @@ if __name__ == "__main__":
     two_grams = sorted(two_grams, key=lambda x: -x[1])
     three_grams = sorted(three_grams, key=lambda x: -x[1])
 
-    letter_1s_lower = [w for w in one_grams if is_letter(w[0]) and w[0].islower()]
-    letter_1s_upper = [w for w in one_grams if is_letter(w[0]) and w[0].isupper()]
+    if False:  # Letter frequency graph
+        letter_1s_lower = [w for w in one_grams if is_letter(w[0]) and w[0].islower()]
+        letter_1s_upper = [w for w in one_grams if is_letter(w[0]) and w[0].isupper()]
 
-    y_pos = range(26, 0, -1)
-    right_bars = [l[1] for l in letter_1s_lower]
-    left_bars = [-ngrams.get(r[0].upper(), 0) for r in letter_1s_lower]
+        y_pos = range(26, 0, -1)
+        right_bars = [l[1] for l in letter_1s_lower]
+        left_bars = [-ngrams.get(r[0].upper(), 0) for r in letter_1s_lower]
 
-    plt.rcdefaults()
-    fig, ax = plt.subplots()
+        plt.rcdefaults()
+        fig, ax = plt.subplots()
 
-    # ax.barh(range(26, 0, -1), [l[1] for l in letter_1s_lower])
-    ax.barh(y_pos, right_bars)
-    ax.barh(y_pos, left_bars)
+        # ax.barh(range(26, 0, -1), [l[1] for l in letter_1s_lower])
+        ax.barh(y_pos, right_bars)
+        ax.barh(y_pos, left_bars)
 
-    ax.set_yticks(y_pos)
-    ax.set_yticklabels([l[0] for l in letter_1s_lower])
+        ax.set_yticks(y_pos)
+        ax.set_yticklabels([l[0] for l in letter_1s_lower])
 
-    plt.savefig("letter_freqs.pdf")
+        plt.savefig("letter_freqs.pdf")
+
+    if True:  # Keypress ngrams
+
+        two_cleaned = [tg for tg in two_grams if (tg[0][0] != tg[0][1])]
+        print(two_cleaned[:8])
+
+        three_cleaned = [
+            tg for tg in three_grams if (tg[0][0] != tg[0][1]) or (tg[0][1] != tg[0][2])
+        ]
+        print(three_cleaned[:8])
