@@ -4,7 +4,7 @@ import sys
 import pickle
 
 
-def parse_motion_word(word):
+def parse_motion_word(word, is_touchscreen=False):
     assert word[:2] == "a["
     axis = int(word[2])
     pos = int(word[5:])
@@ -13,6 +13,8 @@ def parse_motion_word(word):
 
 if __name__ == "__main__":
     assert sys.argv[1], sys.argv[2]
+
+    is_touchscreen = True
 
     positions = [(None, None, None)]
 
@@ -28,9 +30,15 @@ if __name__ == "__main__":
                 position[0] = timestamp
                 for word in words[2:]:
                     axis, pos = parse_motion_word(word)
+
                     if axis == 0:
+                        if is_touchscreen:
+                            pos = int(pos * 3200 / 65536)
+
                         position[1] = pos
                     if axis == 1:
+                        if is_touchscreen:
+                            pos = int(pos * 1800 / 65536)
                         position[2] = pos
 
                 positions.append(tuple(position))
