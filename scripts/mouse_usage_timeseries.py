@@ -10,8 +10,9 @@ from pickle_merger import import_and_merge
 
 
 def make_usage_timeseries(times):
-    first_time, last_time = min(times), max(times)
-    bucket_size = 10 * 60  # Seconds
+    # first_time, last_time = min(times), max(times)
+    first_time, last_time = 0, 60 * 60 * 24
+    bucket_size = 60 * 60  # Seconds
     num_buckets = (last_time - first_time) / bucket_size
 
     buckets = []
@@ -29,22 +30,24 @@ def make_usage_timeseries(times):
     return dates, amounts
 
 
-def criscross_plot(xs, ys, *args, **kwargs):
+def criscross_plot(xs, ys, fill_color, dot_color, line_color, *args, **kwargs):
     ys_1 = np.array(ys)
     ys_2 = np.array(ys)
 
     ys_1[::2] = 0
     ys_2[1::2] = 0
 
-    plt.plot(xs, ys, *args, **kwargs)
-    plt.plot(xs, ys_1, *args, **kwargs)
-    plt.plot(xs, ys_2, *args, **kwargs)
+    plt.plot(xs, ys_1, color=line_color, *args, **kwargs)
+    plt.plot(xs, ys_2, color=line_color, *args, **kwargs)
+    plt.fill_between(xs, ys, 0, color=fill_color)
+    plt.plot(xs, ys, ".", color=dot_color, *args, **kwargs)
 
 
 def loop_by_day(times):
     # TODO: Offset
+    wrap_time = 1575176400 + (5 * 60 * 60)  # 5am EST
     day = 60 * 60 * 24
-    times = np.asarray(times) % day
+    times = (np.asarray(times) - wrap_time) % day  #  + wrap_time
     return sorted(times)
 
 
@@ -54,7 +57,8 @@ if __name__ == "__main__":
     plt.figure(figsize=(20, 8))
     # plt.axis("off")
 
-    colors = [(1, 1, 1), tuple(np.array([95, 85, 110]) / 255)]
+    line_color = tuple(np.array([135, 210, 206]) / 255)
+    fill_colors = [(1, 1, 1), tuple(np.array([95, 85, 110]) / 255)]
 
     for i, filename in enumerate(sys.argv[1:]):
         # data_series = np.array(pickle.load(open(filename, "rb")))
@@ -68,7 +72,16 @@ if __name__ == "__main__":
         if i % 2:
             amounts = -amounts
 
-        criscross_plot(dates, amounts, color=colors[i], linewidth=0.6)
+        criscross_plot(
+            dates,
+            amounts,
+            fill_color=fill_colors[i],
+            dot_color=fill_colors[-i - 1],
+            line_color=line_color,
+            linewidth=1.5,
+            markersize=12,
+        )
 
-    plt.savefig("mouse_timeseries.png", dpi=300, transparent=True)
+    # plt.savefig("mouse_timeseries.png", dpi=300, transparent=True)
+    plt.savefig("mouse_timeseries.svg", transparent=True)
     # plt.show()
