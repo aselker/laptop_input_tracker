@@ -12,6 +12,19 @@ def is_letter(l):
     return l and (l.lower() in alphabet)
 
 
+def horizontal_plot(ys, names=None, *args, **kwargs):
+    y_pos = range(len(ys), 0, -1)
+
+    plt.rcdefaults()
+    fig, ax = plt.subplots()
+
+    ax.barh(y_pos, ys, *args, **kwargs)
+
+    if names:
+        ax.set_yticks(y_pos)
+        ax.set_yticklabels(names)
+
+
 if __name__ == "__main__":
     ngrams = pickle.load(open(sys.argv[1], "rb"))
 
@@ -52,7 +65,17 @@ if __name__ == "__main__":
         two_cleaned = [tg for tg in two_grams if (tg[0][0] != tg[0][1])]
         print(two_cleaned[:8])
 
+        horizontal_plot(
+            [tg[1] for tg in two_cleaned[:8]], two_cleaned[:8], color=(1, 1, 1)
+        )
+        plt.savefig("two_grams.svg", transparent=True)
+
         three_cleaned = [
             tg for tg in three_grams if (tg[0][0] != tg[0][1]) or (tg[0][1] != tg[0][2])
         ]
         print(three_cleaned[:8])
+
+        horizontal_plot(
+            [tg[1] for tg in three_cleaned[:8]], three_cleaned[:8], color=(1, 1, 1)
+        )
+        plt.savefig("three_grams.svg", transparent=True)
