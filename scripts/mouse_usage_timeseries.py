@@ -30,6 +30,18 @@ def make_usage_timeseries(times):
     return dates, amounts
 
 
+def fudge_nonzero(yss, fudge_value=1):
+    yss_fudged = yss.copy()
+
+    for i, ys in enumerate(zip(*yss_fudged)):
+        if any(ys):
+            for j, y in enumerate(ys):
+                if not y:
+                    yss_fudged[j][i] = fudge_value
+
+    return yss_fudged
+
+
 def criscross_plot(xs, ys, fill_color, dot_color, line_color, *args, **kwargs):
     ys_1 = np.array(ys)
     ys_2 = np.array(ys)
@@ -60,6 +72,7 @@ if __name__ == "__main__":
     line_color = tuple(np.array([135, 210, 206]) / 255)
     fill_colors = [(1, 1, 1), tuple(np.array([95, 85, 110]) / 255)]
 
+    datess, amountss = [], []
     for i, filename in enumerate(sys.argv[1:]):
         # data_series = np.array(pickle.load(open(filename, "rb")))
         data_series = np.array(import_and_merge([filename]))
@@ -68,10 +81,13 @@ if __name__ == "__main__":
 
         amounts = np.array(amounts)
 
-        # Make one plot upside down
-        if i % 2:
-            amounts = -amounts
+        datess.append(dates)
+        amountss.append(amounts)
 
+    amountss = fudge_nonzero(amountss, np.mean(amountss) / 12)
+    amountss[1] = -amountss[1]  # Make one plot upside down
+
+    for i, (dates, amounts) in enumerate(zip(datess, amountss)):
         criscross_plot(
             dates,
             amounts,
