@@ -10,8 +10,8 @@ from pickle_merger import import_and_merge
 
 
 def show_streamlines(diffs):
-    magnitude = np.transpose(np.linalg.norm(diffs, axis=2)) * 6
-    # magnitude = np.clip(magnitude, None, 10)
+    magnitude = np.transpose(np.linalg.norm(diffs, axis=2)) * 4  # Mouse
+    # magnitude = np.transpose(np.linalg.norm(diffs, axis=2)) * 6 # Touchscreen
 
     ys, xs = np.mgrid[0 : diffs.shape[1], 0 : diffs.shape[0]]
 
@@ -36,14 +36,16 @@ def show_streamlines(diffs):
 
 def show_heatmap(diffs):
     magnitude = np.linalg.norm(diffs, axis=2)
-    magnitude = np.array(gaussian(magnitude, sigma=50, mode="constant", cval=0))
+    magnitude = np.array(
+        gaussian(magnitude, sigma=50, mode="constant", cval=-np.amin(magnitude))
+    )
 
     def color_map(x):
         x = x - np.amin(x)
         x = x / np.amax(x)
 
         fudge_up = 0.8
-        fudge_down = 1.4
+        fudge_down = 1.8
         x = x * (1 + fudge_up + fudge_down)
         x = np.clip(x, 0, 1)
 
