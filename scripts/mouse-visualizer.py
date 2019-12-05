@@ -37,16 +37,17 @@ def show_streamlines(diffs):
 def show_heatmap(diffs):
     magnitude = np.linalg.norm(diffs, axis=2)
     magnitude = np.array(
-        gaussian(magnitude, sigma=50, mode="constant", cval=-np.amin(magnitude))
+        gaussian(magnitude, sigma=50, mode="constant", cval=-np.amax(magnitude))
     )
 
     def color_map(x):
         x = x - np.amin(x)
         x = x / np.amax(x)
 
-        fudge_up = 0.8
-        fudge_down = 1.8
+        fudge_up = 1.8
+        fudge_down = 0.4
         x = x * (1 + fudge_up + fudge_down)
+        x = x - fudge_down
         x = np.clip(x, 0, 1)
 
         start_rgb = np.array([135, 210, 206]) / 255
